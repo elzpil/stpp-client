@@ -1,11 +1,11 @@
 // src/components/CityList.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useParams } from 'react-router-dom';
+import { Link, useParams } from 'react-router-dom';
 
 const CityList = () => {
   const [cities, setCities] = useState([]);
-  const { countryId } = useParams(); // Use the useParams hook to get the countryId
+  const { countryId } = useParams();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -22,21 +22,24 @@ const CityList = () => {
 
   return (
     <div className="list-container">
-      <h1>City List for Country {countryId}</h1>
+      <h1>City List</h1>
       <table>
         <thead>
           <tr>
-            <th>Name       </th>
+            <th>Name</th>
             <th>Description</th>
-            <th>           </th>
+            <th>Details</th>
           </tr>
         </thead>
         <tbody>
           {cities.map((city) => (
             <tr key={city.id}>
-              <td>{city.name}</td>
+              <td><Link to={`/countries/${countryId}/cities/${city.id}`}>{[city.name]}</Link></td>
               <td>{city.description}</td>
-              <td></td> {/* Empty column */}
+              <td>
+                {/* Link to the city details */}
+                <Link to={`/countries/${countryId}/cities/${city.id}/places`}>Places</Link>
+              </td>
             </tr>
           ))}
         </tbody>

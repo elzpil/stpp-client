@@ -22,12 +22,16 @@ const CountryList = () => {
   return (
     <div className="list-container">
       <h1>Country List</h1>
+      {/* Add a button to create a new country */}
+            <Link to="/countries/new">
+              <button>Create New Country</button>
+            </Link>
       <table>
         <thead>
           <tr>
             <th>Name</th>
             <th>Description</th>
-            <th>Empty Column</th>
+            <th>Cities</th>
           </tr>
         </thead>
         <tbody>

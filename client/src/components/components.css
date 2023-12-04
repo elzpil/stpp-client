@@ -37,13 +37,9 @@
   padding: 10px;
 }
 
-
-
-
 .content {
   padding: 20px;
 }
-
 
 .navbar {
   background-color: #b3c9f4;
@@ -102,11 +98,28 @@
 }
 
 .list-container td {
-  background-color: #f0f0f0; /* Set your desired background color */
+  background-color: #f0f0f0;
 }
 
 .list-container td.empty-column {
   /* Styles for the empty column */
+}
+
+footer {
+  background-color: #b3c9f4;
+  padding: 5px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
+
+footer p {
+  margin: 0; /* Remove default margin */
+  text-align: center;
+  flex-grow: 1; /* Allow the <p> to take up remaining space */
 }
 
 
