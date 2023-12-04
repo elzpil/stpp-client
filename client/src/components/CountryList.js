@@ -1,6 +1,7 @@
 // src/components/CountryList.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 const CountryList = () => {
   const [countries, setCountries] = useState([]);
@@ -19,15 +20,31 @@ const CountryList = () => {
   }, []);
 
   return (
-    <div>
+    <div className="list-container">
       <h1>Country List</h1>
-      <ul>
-        {countries.map((country) => (
-          <li key={country.id}>
-            <strong>{country.name}</strong> - {country.description}
-          </li>
-        ))}
-      </ul>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th>Empty Column</th>
+          </tr>
+        </thead>
+        <tbody>
+          {countries.map((country) => (
+            <tr key={country.id}>
+              <td>
+                {/* Make the country name a link */}
+                <Link to={`/countries/${country.id}`}>{country.name}</Link>
+              </td>
+              <td>{country.description}</td>
+              <td>
+                <Link to={`/countries/${country.id}/cities`}>Cities</Link>
+              </td> {/* Empty column */}
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 };

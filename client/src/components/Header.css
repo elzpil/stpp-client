@@ -1,0 +1,34 @@
+/* Header.css */
+
+.header {
+  background-color: #f0f0f0;
+  padding: 10px;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.nav-left {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-left li {
+  display: inline-block;
+  margin-right: 20px;
+}
+
+.nav-right {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-right li {
+  display: inline-block;
+  margin-left: 20px;
+}

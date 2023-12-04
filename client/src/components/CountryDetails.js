@@ -25,7 +25,7 @@ const CountryDetails = () => {
   }
 
   return (
-    <div>
+    <div className="container">
       <h1>{country.name}</h1>
       <p>{country.description}</p>
     </div>
