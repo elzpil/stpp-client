@@ -23,6 +23,9 @@ const CityList = () => {
   return (
     <div className="list-container">
       <h1>City List</h1>
+      <Link to={`/countries/${countryId}/cities/new`}>
+         <button>Create New City</button>
+      </Link>
       <table>
         <thead>
           <tr>

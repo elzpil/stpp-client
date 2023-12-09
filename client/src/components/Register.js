@@ -1,12 +1,15 @@
-// components/Register.js
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 import './components.css';
 
 const Register = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  // Access the navigate function
+  const navigate = useNavigate();
 
   const handleRegister = async () => {
     try {
@@ -24,10 +27,11 @@ const Register = () => {
         }
       );
 
-
       if (response && response.data) {
         console.log('Registration Successful', response.data);
-        // Handle successful registration, e.g., redirect to login page
+
+        // Redirect to the login page after successful registration
+        navigate('/login');
       } else {
         console.error('Invalid response:', response);
       }
@@ -36,6 +40,8 @@ const Register = () => {
       console.error('Registration Error:', error.response ? error.response.data : error.message);
     }
   };
+
+
 
 
 return (

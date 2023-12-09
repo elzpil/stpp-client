@@ -1,11 +1,13 @@
 // components/Login.js
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom'; // Import useNavigate
 
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
 
+  const navigate = useNavigate();
   const handleLogin = async () => {
     try {
       const response = await axios.post('https://oyster-app-4bwlf.ondigitalocean.app/api/login', {
@@ -15,6 +17,7 @@ const Login = () => {
 
       // Handle successful login, e.g., store tokens in local storage
       console.log('Login Successful', response.data);
+      navigate('/countries');
     } catch (error) {
       // Handle login error
       console.error('Login Error:', error.response.data);

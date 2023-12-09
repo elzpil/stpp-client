@@ -23,12 +23,14 @@ const PlaceList = () => {
   return (
     <div className="list-container">
       <h1>Place List for City {cityId}</h1>
+      <Link to={`/countries/${countryId}/cities/${cityId}/places/new`}>
+        <button>Create New Place</button>
+      </Link>
       <table>
         <thead>
           <tr>
             <th>Name</th>
             <th>Description</th>
-            <th>Details</th>
           </tr>
         </thead>
         <tbody>
@@ -39,9 +41,6 @@ const PlaceList = () => {
                 <Link to={`/countries/${countryId}/cities/${cityId}/places/${place.id}`}>{place.name}</Link>
               </td>
               <td>{place.description}</td>
-              <td>
-                {/* You can add additional details or actions if needed */}
-              </td>
             </tr>
           ))}
         </tbody>

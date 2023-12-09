@@ -5,7 +5,8 @@
   text-align: center;
   border: 1px solid #ccc;
   border-radius: 8px;
-  background-color: #7b808d;
+  background-color: #d3d3d3;
+  margin-top: 20px;
 }
 
 .container label {
@@ -21,28 +22,28 @@
 }
 
 .container button {
-  background-color: #b3c9f4;
+  background-color: #000066;
   color: white;
   padding: 10px 15px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
+  margin-left: 20px;
 }
 
 .app-container {
-  background-color: #f0f0f0; /* Set your desired background color */
+  background-color: #d3d3d3; /* Set your desired background color */
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 10px;
+  margin-top: 20px;
 }
 
-.content {
-  padding: 20px;
-}
+
 
 .navbar {
-  background-color: #b3c9f4;
+  background-color: #000066;
   font-family: 'Roboto Mono', sans-serif;
   padding: 20px;
   display: flex;
@@ -78,7 +79,18 @@
   text-align: center;
   border: 1px solid #ccc;
   border-radius: 8px;
-  background-color: #7b808d;
+  background-color: #d3d3d3;
+  margin-top: 20px;
+}
+
+.list-container button {
+  background-color: #000066;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-left: 20px;
 }
 
 .list-container table {
@@ -93,7 +105,7 @@
 }
 
 .list-container th {
-  background-color: #b3c9f4;
+  background-color: #000066;
   color: white;
 }
 
@@ -106,7 +118,7 @@
 }
 
 footer {
-  background-color: #b3c9f4;
+  background-color: #000066;
   padding: 5px;
   display: flex;
   justify-content: space-between;
@@ -114,6 +126,8 @@ footer {
   position: fixed;
   bottom: 0;
   width: 100%;
+  color: white;
+  margin-top: 20px;
 }
 
 footer p {

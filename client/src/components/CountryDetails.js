@@ -45,8 +45,8 @@ const CountryDetails = () => {
     <div className="container">
       <h1>{country.name}</h1>
       <p>{country.description}</p>
-      <button onClick={handleEditClick}>Edit</button>
-      <button onClick={handleDeleteClick}>Delete</button>
+      <button class="left-aligned-button" onClick={handleEditClick}>Edit</button>
+      <button class="right-aligned-button" onClick={handleDeleteClick}>Delete</button>
     </div>
   );
 };
