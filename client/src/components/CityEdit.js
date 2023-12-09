@@ -91,6 +91,7 @@ const CityEdit = () => {
   return (
     <div className="container">
       <h1>Edit City: {city.name}</h1>
+      {errorMessage && ( <p style={{ color: 'red' }}>{errorMessage}</p> )}
       <label>
         Description:
         <textarea value={editedDescription} onChange={(e) => setEditedDescription(e.target.value)} />
