@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 
 const CountryList = () => {
   const [countries, setCountries] = useState([]);
+  const accessToken = localStorage.getItem('accessToken'); // Get access token from localStorage
 
   useEffect(() => {
     const fetchData = async () => {
@@ -22,10 +23,14 @@ const CountryList = () => {
   return (
     <div className="list-container">
       <h1>Country List</h1>
-      {/* Add a button to create a new country */}
-            <Link to="/countries/new">
-              <button>Create New Country</button>
-            </Link>
+
+      {/* Conditionally render the button based on the existence of the access token */}
+      {accessToken && (
+        <Link to="/countries/new">
+          <button>Create New Country</button>
+        </Link>
+      )}
+
       <table>
         <thead>
           <tr>
@@ -43,8 +48,11 @@ const CountryList = () => {
               </td>
               <td>{country.description}</td>
               <td>
-                <Link to={`/countries/${country.id}/cities`}>Cities</Link>
-              </td> {/* Empty column */}
+
+
+                  <Link to={`/countries/${country.id}/cities`}>Cities</Link>
+
+              </td>
             </tr>
           ))}
         </tbody>

@@ -6,6 +6,7 @@ import { Link, useParams } from 'react-router-dom';
 const CityList = () => {
   const [cities, setCities] = useState([]);
   const { countryId } = useParams();
+  const accessToken = localStorage.getItem('accessToken');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -23,9 +24,13 @@ const CityList = () => {
   return (
     <div className="list-container">
       <h1>City List</h1>
-      <Link to={`/countries/${countryId}/cities/new`}>
-         <button>Create New City</button>
-      </Link>
+
+
+      {accessToken && (
+              <Link to={`/countries/${countryId}/cities/new`}>
+                <button>Create New City</button>
+              </Link>
+            )}
       <table>
         <thead>
           <tr>

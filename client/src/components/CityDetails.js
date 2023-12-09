@@ -2,11 +2,14 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams, Link, useNavigate } from 'react-router-dom';
+import isTokenExpired from './IsTokenExpired';
 
 const CityDetails = () => {
   const { countryId, cityId } = useParams();
   const [city, setCity] = useState(null);
   const navigate = useNavigate();
+  const accessToken = localStorage.getItem('accessToken');
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     const fetchData = async () => {
@@ -20,21 +23,63 @@ const CityDetails = () => {
 
     fetchData();
   }, [countryId, cityId]);
+
   const handleEditClick = () => {
-    // Navigate to the edit page
     navigate(`/countries/${countryId}/cities/${cityId}/edit`);
   };
 
   const handleDeleteClick = async () => {
     try {
-      // Send a DELETE request to the country endpoint
-      await axios.delete(`https://oyster-app-4bwlf.ondigitalocean.app/api/countries/${countryId}/cities/${cityId}`);
-      // Redirect to the countries list or another page after deletion
-      navigate('/countries/${countryId}/cities');
-    } catch (error) {
-      console.error(`Error deleting city with ID ${cityId}:`, error);
+      let accessToken = localStorage.getItem('accessToken');
+      const refreshToken = localStorage.getItem('refreshToken');
+
+      const isAccessTokenExpired = isTokenExpired(accessToken);
+      const isRefreshTokenExpired = isTokenExpired(refreshToken);
+
+      if (isAccessTokenExpired) {
+        const response = await axios.post(
+          'https://oyster-app-4bwlf.ondigitalocean.app/api/accessToken',
+          {
+            refreshToken: localStorage.getItem('refreshToken'),
+          }
+        );
+
+        if (response && response.data) {
+          accessToken = response.data.accessToken;
+          localStorage.setItem('accessToken', accessToken);
+        } else {
+          console.error('Error refreshing token:', response);
+          return;
+        }
+      }
+
+      await axios.delete(`https://oyster-app-4bwlf.ondigitalocean.app/api/countries/${countryId}/cities/${cityId}`, {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      navigate(`/countries/${countryId}/cities`);
+  } catch (error) {
+    console.error('Error deleting :', error);
+
+    if (error.response && error.response.status === 422) {
+      // Handle validation errors
+      const validationErrors = error.response.data.errors;
+      const errorMessage = Object.values(validationErrors).flat().join(', ');
+      setErrorMessage(errorMessage);
+    } else if (error.response && error.response.status === 403){
+      setErrorMessage("unauthorized");
+    } else {
+
+      // Handle other types of errors
+      const errorMessage = error.response ? error.response.data.message : error.message;
+      setErrorMessage(errorMessage);
     }
-  };
+  }
+};
+
   if (!city) {
     return <div>Loading...</div>;
   }
@@ -43,8 +88,9 @@ const CityDetails = () => {
     <div className="container">
       <h1>{city.name}</h1>
       <p>{city.description}</p>
-      <button class="left-aligned-button" onClick={handleEditClick}>Edit</button>
-      <button class="right-aligned-button" onClick={handleDeleteClick}>Delete</button>
+      {accessToken && (<button class="left-aligned-button" onClick={handleEditClick}>Edit</button>)}
+      {accessToken && (<button class="right-aligned-button" onClick={handleDeleteClick}>Delete</button>)}
+      {errorMessage && ( <p style={{ color: 'red' }}>{errorMessage}</p> )}
     </div>
   );
 };

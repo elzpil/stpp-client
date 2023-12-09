@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate } from 'react-router-dom';
 import './components.css';
 
 const Register = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
-  // Access the navigate function
+  const [error, setError] = useState(null); // State to store registration error
   const navigate = useNavigate();
+  const [errorMessage, setErrorMessage] = useState('');
 
   const handleRegister = async () => {
     try {
@@ -29,24 +29,27 @@ const Register = () => {
 
       if (response && response.data) {
         console.log('Registration Successful', response.data);
-
-        // Redirect to the login page after successful registration
         navigate('/login');
       } else {
         console.error('Invalid response:', response);
+        setError('Invalid response');
       }
-    } catch (error) {
-      // Handle registration error
-      console.error('Registration Error:', error.response ? error.response.data : error.message);
-    }
+} catch (error) {
+  console.error('Registration Error:', error.response ? error.response.data : error.message);
+//setErrorMessage('Example error message!');
+  const errorMessage = error.response ? error.response.data.message : error.message;
+  // Use a function form of setState to ensure state is updated correctly
+  setErrorMessage(error.response ? error.response.data : error.message);
+
+}
+
+
   };
 
-
-
-
-return (
+  return (
     <div className="container">
       <h2>Register</h2>
+      {errorMessage && ( <p style={{ color: 'red' }}>{errorMessage}</p> )}
       <label htmlFor="username">Username</label>
       <input
         type="text"
@@ -78,6 +81,5 @@ return (
     </div>
   );
 };
-
 
 export default Register;

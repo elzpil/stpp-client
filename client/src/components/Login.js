@@ -1,32 +1,60 @@
-// components/Login.js
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // Import useNavigate
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-
+  const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
-  const handleLogin = async () => {
-    try {
-      const response = await axios.post('https://oyster-app-4bwlf.ondigitalocean.app/api/login', {
-        username,
-        password,
-      });
 
-      // Handle successful login, e.g., store tokens in local storage
-      console.log('Login Successful', response.data);
-      navigate('/countries');
+  const handleLogin = async (username, password) => {
+    try {
+      const response = await axios.post(
+        'https://oyster-app-4bwlf.ondigitalocean.app/api/login',
+        {
+          username,
+          password,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+          },
+        }
+      );
+
+      if (response && response.data) {
+        const { accessToken, refreshToken } = response.data;
+
+        // Store tokens in localStorage
+        localStorage.setItem('accessToken', accessToken);
+        localStorage.setItem('refreshToken', refreshToken);
+
+        // Redirect after successful login
+        navigate('/countries');
+      } else {
+        console.error('Invalid response:', response);
+      }
     } catch (error) {
-      // Handle login error
-      console.error('Login Error:', error.response.data);
+      console.error('Login Error:', error.response ? error.response.data : error.message);
+      const errorMessage = error.response ? error.response.data.message : error.message;
+      setErrorMessage(errorMessage);
     }
+  };
+
+  const handleLogout = () => {
+    // Clear tokens from localStorage or wherever they are stored
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('refreshToken');
+
+    // Redirect to the login page or another route after logout
+    navigate('/login');
   };
 
   return (
     <div className="container">
       <h2>Login</h2>
+      {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
       <label htmlFor="username">Username</label>
       <input
         type="text"
@@ -41,7 +69,8 @@ const Login = () => {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
-      <button onClick={handleLogin}>Login</button>
+      <button onClick={() => handleLogin(username, password)}>Login</button>
+      <button onClick={handleLogout}>Logout</button>
     </div>
   );
 };
