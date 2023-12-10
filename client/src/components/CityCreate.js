@@ -51,7 +51,7 @@ const CityCreate = () => {
              });
 
       // Redirect to the details page of the newly created city
-      navigate(`/countries/${countryId}/cities/${response.data.id}`);
+      navigate(`/countries/${countryId}/cities`);
   } catch (error) {
     console.error('Error creating country:', error);
 

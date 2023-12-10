@@ -51,7 +51,7 @@ const PlaceCreate = () => {
                     });
 
       // Redirect to the details page of the newly created place
-      navigate(`/countries/${countryId}/cities/${cityId}/places/${response.data.id}`);
+      navigate(`/countries/${countryId}/cities/${cityId}/places`);
   } catch (error) {
     console.error('Error creating country:', error);
 

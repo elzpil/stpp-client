@@ -54,7 +54,7 @@ const handleCreate = async () => {
     );
 
     // Redirect to the details page of the newly created country
-    navigate(`/countries/${response.data.id}`);
+    navigate(`/countries`);
 
   } catch (error) {
     console.error('Error creating country:', error);

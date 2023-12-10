@@ -23,7 +23,7 @@ const PlaceList = () => {
 
   return (
     <div className="list-container">
-      <h1>Place List for City {cityId}</h1>
+      <h1>Place List</h1>
 
       {accessToken && (
               <Link to={`/countries/${countryId}/cities/${cityId}/places/new`}>
