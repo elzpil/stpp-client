@@ -65,7 +65,7 @@ const CountryEdit = () => {
                },
              });
       // Redirect to the country details page after editing
-      navigate(`/countries/${countryId}`);
+      navigate(`/countries`);
   } catch (error) {
     console.error('Error editing country:', error);
 

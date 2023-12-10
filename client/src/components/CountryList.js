@@ -31,7 +31,7 @@ const CountryList = () => {
         </Link>
       )}
 
-      <table>
+      <table className="custom-table">
         <thead>
           <tr>
             <th>Name</th>

@@ -7,6 +7,7 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
+  const accessToken = localStorage.getItem('accessToken');
 
   const handleLogin = async (username, password) => {
     try {
@@ -29,6 +30,7 @@ const Login = () => {
         // Store tokens in localStorage
         localStorage.setItem('accessToken', accessToken);
         localStorage.setItem('refreshToken', refreshToken);
+        localStorage.setItem('username', username);
 
         // Redirect after successful login
         navigate('/countries');
@@ -46,9 +48,9 @@ const Login = () => {
     // Clear tokens from localStorage or wherever they are stored
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
-
+    localStorage.removeItem('username');
     // Redirect to the login page or another route after logout
-    navigate('/login');
+    navigate('/countries');
   };
 
   return (
@@ -70,7 +72,8 @@ const Login = () => {
         onChange={(e) => setPassword(e.target.value)}
       />
       <button onClick={() => handleLogin(username, password)}>Login</button>
-      <button onClick={handleLogout}>Logout</button>
+
+      {accessToken && (<button onClick={handleLogout}>Logout</button>)}
     </div>
   );
 };

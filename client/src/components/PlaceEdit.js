@@ -66,7 +66,7 @@ const PlaceEdit = () => {
                              },
                            });
       // Redirect to the place details page after editing
-      navigate(`/countries/${countryId}/cities/${cityId}/places/${placeId}`);
+      navigate(`/countries/${countryId}/cities/${cityId}/places`);
   } catch (error) {
     console.error('Error editing :', error);
 

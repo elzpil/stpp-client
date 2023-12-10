@@ -64,7 +64,7 @@ const CityEdit = () => {
                       },
                     });
       // Redirect to the city details page after editing
-      navigate(`/countries/${countryId}/cities/${cityId}`);
+      navigate(`/countries/${countryId}/cities`);
   } catch (error) {
     console.error('Error editing :', error);
 

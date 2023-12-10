@@ -2,6 +2,9 @@
 import React from 'react';
 import { BrowserRouter as Router, Route, Routes, Link, useLocation } from 'react-router-dom';
 
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faGlobe } from '@fortawesome/free-solid-svg-icons';
+
 import CountryList from './components/CountryList';
 import CountryDetails from './components/CountryDetails';
 import CountryEdit from './components/CountryEdit';
@@ -16,18 +19,26 @@ import PlaceCreate from './components/PlaceCreate';
 import PlaceEdit from './components/PlaceEdit';
 import Login from './components/Login';
 import Register from './components/Register';
+import Home from './components/Home';
 
 const App = () => {
+  const storedUsername = localStorage.getItem('username');
+  const accessToken = localStorage.getItem('accessToken');
 
   return (
     <Router>
+
       <div>
         <header>
+
+
                   {/* Add a navigation link to CountryList */}
                   <nav className="navbar">
                     <ul>
                       <li>
-                        <Link to="/">Main</Link>
+                        <Link to="/home">
+                        <FontAwesomeIcon icon={faGlobe} style={{ fontSize: '2em' }} />
+                        </Link>
                       </li>
                     </ul>
                     <ul>
@@ -36,6 +47,9 @@ const App = () => {
                       </li>
                     </ul>
                     <ul className="right">
+                      <li>
+                        {accessToken && (<p id="loggedInMessage">Logged in as {storedUsername}</p>)}
+                      </li>
                       <li>
                         <Link to="/login">Login</Link>
                       </li>
@@ -60,6 +74,7 @@ const App = () => {
           <Route path="/countries" element={<CountryList />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/home" element={<Home />} />
           {/* Add more routes as needed */}
         </Routes>
         <footer>
