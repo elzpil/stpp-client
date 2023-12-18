@@ -31,6 +31,14 @@ const CountryDetails = () => {
 
 const handleDeleteClick = async () => {
   try {
+
+  const confirmed = window.confirm('Are you sure you want to delete this country?');
+
+      if (!confirmed) {
+        // If the user cancels the operation, do nothing
+        return;
+      }
+
     // Retrieve access token from localStorage
     let accessToken = localStorage.getItem('accessToken');
         const refreshToken = localStorage.getItem('refreshToken');
@@ -68,6 +76,8 @@ const handleDeleteClick = async () => {
 
     // Redirect to the countries list or another page after deletion
     navigate('/countries');
+
+
   } catch (error) {
     console.error('Error deleting :', error);
 

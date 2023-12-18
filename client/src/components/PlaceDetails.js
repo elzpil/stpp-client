@@ -30,7 +30,14 @@ const PlaceDetails = () => {
   };
 
   const handleDeleteClick = async () => {
-    try {
+  try {
+
+  const confirmed = window.confirm('Are you sure you want to delete this place?');
+
+      if (!confirmed) {
+        // If the user cancels the operation, do nothing
+        return;
+      }
 
     let accessToken = localStorage.getItem('accessToken');
             const refreshToken = localStorage.getItem('refreshToken');
