@@ -15,7 +15,7 @@ const CountryEdit = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`https://oyster-app-4bwlf.ondigitalocean.app/api/countries/${countryId}`);
+        const response = await axios.get(`https://localhost:7036/api/countries/${countryId}`);
         const { description } = response.data;
         setCountry(response.data);
         setEditedDescription(description);
@@ -38,7 +38,7 @@ const CountryEdit = () => {
         if (isAccessTokenExpired) {
               // Use the refresh token to get a new access token
               const response = await axios.post(
-                'https://oyster-app-4bwlf.ondigitalocean.app/api/accessToken',
+                'https://localhost:7036/api/accessToken',
                 {
                   refreshToken: localStorage.getItem('refreshToken'),
                 }
@@ -55,15 +55,15 @@ const CountryEdit = () => {
               }
             }
       // Send a PUT request to update the country description
-      await axios.put(`https://oyster-app-4bwlf.ondigitalocean.app/api/countries/${countryId}`, {
+      await axios.put(`https://localhost:7036/api/countries/${countryId}`, {
         description: editedDescription,
       },
-             {
-               headers: {
-                 'Content-Type': 'application/json',
-                 Authorization: `Bearer ${accessToken}`,
-               },
-             });
+         {
+           headers: {
+             'Content-Type': 'application/json',
+             Authorization: `Bearer ${accessToken}`,
+           },
+         });
       // Redirect to the country details page after editing
       navigate(`/countries`);
   } catch (error) {

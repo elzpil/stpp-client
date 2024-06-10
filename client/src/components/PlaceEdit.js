@@ -23,7 +23,7 @@ const PlaceEdit = () => {
                if (isAccessTokenExpired) {
                  // Use the refresh token to get a new access token
                  const response = await axios.post(
-                   'https://oyster-app-4bwlf.ondigitalocean.app/api/accessToken',
+                   'https://localhost:7036/api/accessToken',
                    {
                      refreshToken: localStorage.getItem('refreshToken'),
                    }
@@ -40,7 +40,7 @@ const PlaceEdit = () => {
                  }
                }
 
-        const response = await axios.get(`https://oyster-app-4bwlf.ondigitalocean.app/api/countries/${countryId}/cities/${cityId}/places/${placeId}`);
+        const response = await axios.get(`https://localhost:7036/api/countries/${countryId}/cities/${cityId}/places/${placeId}`);
         const { description } = response.data;
         setPlace(response.data);
         setEditedDescription(description);
@@ -56,7 +56,7 @@ const PlaceEdit = () => {
     try {
     let accessToken = localStorage.getItem('accessToken');
       // Send a PUT request to update the place description
-      await axios.put(`https://oyster-app-4bwlf.ondigitalocean.app/api/countries/${countryId}/cities/${cityId}/places/${placeId}`, {
+      await axios.put(`https://localhost:7036/api/countries/${countryId}/cities/${cityId}/places/${placeId}`, {
         description: editedDescription,
       },
                            {

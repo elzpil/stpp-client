@@ -22,7 +22,7 @@ const PlaceCreate = () => {
          if (isAccessTokenExpired) {
            // Use the refresh token to get a new access token
            const response = await axios.post(
-             'https://oyster-app-4bwlf.ondigitalocean.app/api/accessToken',
+             'https://localhost:7036/api/accessToken',
              {
                refreshToken: localStorage.getItem('refreshToken'),
              }
@@ -39,7 +39,7 @@ const PlaceCreate = () => {
            }
          }
       // Send a POST request to create a new place within the specified city
-      const response = await axios.post(`https://oyster-app-4bwlf.ondigitalocean.app/api/countries/${countryId}/cities/${cityId}/places`, {
+      const response = await axios.post(`https://localhost:7036/api/countries/${countryId}/cities/${cityId}/places`, {
         name,
         description,
       },

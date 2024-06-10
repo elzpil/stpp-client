@@ -14,7 +14,7 @@ const Register = () => {
   const handleRegister = async () => {
     try {
       const response = await axios.post(
-        'https://oyster-app-4bwlf.ondigitalocean.app/api/register',
+        'https://localhost:7036/api/register',
         {
           username,
           email,

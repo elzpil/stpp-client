@@ -12,7 +12,7 @@ const Login = () => {
   const handleLogin = async (username, password) => {
     try {
       const response = await axios.post(
-        'https://oyster-app-4bwlf.ondigitalocean.app/api/login',
+        'https://localhost:7036/api/login',
         {
           username,
           password,

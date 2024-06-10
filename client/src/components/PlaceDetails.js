@@ -10,12 +10,26 @@ const PlaceDetails = () => {
   const navigate = useNavigate();
   const accessToken = localStorage.getItem('accessToken');
   const [errorMessage, setErrorMessage] = useState('');
+  const [comments, setComments] = useState([]);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(`https://oyster-app-4bwlf.ondigitalocean.app/api/countries/${countryId}/cities/${cityId}/places/${placeId}`);
+        const response = await axios.get(`https://localhost:7036/api/countries/${countryId}/cities/${cityId}/places/${placeId}`);
         setPlace(response.data);
+        const commentResponse = await axios.get(`https://localhost:7036/api/things/comments`);
+        console.log("Comments Data:", commentResponse.data);
+        const filteredComments = commentResponse.data.filter(comment => comment.entityId === parseInt(placeId) && comment.entityType === "place");
+        // Fetch user names for comments and update state
+        const updatedComments = await Promise.all(filteredComments.map(async (comment) => {
+          if (comment.userId) {
+            const userName = await fetchUserName(comment.userId);
+            return { ...comment, userName };
+          } else {
+            return { ...comment, userName: "Unknown User" };
+          }
+        }));
+        setComments(updatedComments);
       } catch (error) {
         console.error(`Error fetching place with ID ${placeId} in city with ID ${cityId} in country with ID ${countryId}:`, error);
       }
@@ -23,6 +37,15 @@ const PlaceDetails = () => {
 
     fetchData();
   }, [countryId, cityId, placeId]);
+  const fetchUserName = async (userId) => {
+    try {
+      const userResponse = await axios.get(`https://localhost:7036/users/${userId}`);
+      return userResponse.data;
+    } catch (error) {
+      console.error(`Error fetching user with ID ${userId}:`, error);
+      return null;
+    }
+  };
 
   const handleEditClick = () => {
     // Navigate to the edit page for the current place
@@ -34,44 +57,44 @@ const PlaceDetails = () => {
 
   const confirmed = window.confirm('Are you sure you want to delete this place?');
 
-      if (!confirmed) {
-        // If the user cancels the operation, do nothing
-        return;
-      }
+    if (!confirmed) {
+    // If the user cancels the operation, do nothing
+    return;
+    }
 
     let accessToken = localStorage.getItem('accessToken');
-            const refreshToken = localStorage.getItem('refreshToken');
+    const refreshToken = localStorage.getItem('refreshToken');
 
-            const isAccessTokenExpired = isTokenExpired(accessToken);
-            const isRefreshTokenExpired = isTokenExpired(refreshToken);
+    const isAccessTokenExpired = isTokenExpired(accessToken);
+    const isRefreshTokenExpired = isTokenExpired(refreshToken);
 
-            if (isAccessTokenExpired) {
-              // Use the refresh token to get a new access token
-              const response = await axios.post(
-                'https://oyster-app-4bwlf.ondigitalocean.app/api/accessToken',
-                {
-                  refreshToken: localStorage.getItem('refreshToken'),
-                }
-              );
+    if (isAccessTokenExpired) {
+      // Use the refresh token to get a new access token
+      const response = await axios.post(
+        'https://localhost:7036/api/accessToken',
+        {
+          refreshToken: localStorage.getItem('refreshToken'),
+        }
+      );
 
-              if (response && response.data) {
-                // Update the stored access token with the new one
-                accessToken = response.data.accessToken;
-                localStorage.setItem('accessToken', accessToken);
-              } else {
-                // Handle the case where refreshing the token failed
-                console.error('Error refreshing token:', response);
-                return;
-              }
-            }
+      if (response && response.data) {
+        // Update the stored access token with the new one
+        accessToken = response.data.accessToken;
+        localStorage.setItem('accessToken', accessToken);
+      } else {
+        // Handle the case where refreshing the token failed
+        console.error('Error refreshing token:', response);
+        return;
+      }
+    }
 
       // Send a DELETE request to the place endpoint
-      await axios.delete(`https://oyster-app-4bwlf.ondigitalocean.app/api/countries/${countryId}/cities/${cityId}/places/${placeId}`, {
-                                                                                                                                          headers: {
-                                                                                                                                            'Content-Type': 'application/json',
-                                                                                                                                            Authorization: `Bearer ${accessToken}`,
-                                                                                                                                          },
-                                                                                                                                        });
+      await axios.delete(`https://localhost:7036/api/countries/${countryId}/cities/${cityId}/places/${placeId}`, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${accessToken}`,
+          },
+        });
       // Redirect to the city details page or another page after deletion
       navigate(`/countries/${countryId}/cities/${cityId}/places`);
   } catch (error) {
@@ -104,6 +127,17 @@ const PlaceDetails = () => {
       {accessToken && (<button class="left-aligned-button" onClick={handleEditClick}>Edit</button>)}
       {accessToken && (<button class="right-aligned-button" onClick={handleDeleteClick}>Delete</button>)}
       {errorMessage && ( <p style={{ color: 'red' }}>{errorMessage}</p> )}
+      <div>
+        {comments.length === 0 ? (
+          <p>No comments yet.</p>
+        ) : (
+          comments.map((comment) => (
+            <div key={comment.id} className="comment">
+              <p><strong>{comment.userName}</strong>: {comment.content}</p>
+            </div>
+          ))
+        )}
+      </div>
     </div>
   );
 };

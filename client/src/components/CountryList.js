@@ -1,16 +1,16 @@
-// src/components/CountryList.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 
 const CountryList = () => {
   const [countries, setCountries] = useState([]);
+  const [searchQuery, setSearchQuery] = useState('');
   const accessToken = localStorage.getItem('accessToken'); // Get access token from localStorage
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get('https://oyster-app-4bwlf.ondigitalocean.app/api/countries');
+        const response = await axios.get('https://localhost:7036/api/countries');
         setCountries(response.data);
       } catch (error) {
         console.error('Error fetching countries:', error);
@@ -20,10 +20,28 @@ const CountryList = () => {
     fetchData();
   }, []);
 
+  const handleSearchChange = (event) => {
+    setSearchQuery(event.target.value);
+  };
+
+  const filteredCountries = countries.filter((country) =>
+    country.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    country.description.toLowerCase().includes(searchQuery.toLowerCase())
+  );
+
   return (
     <div className="list-container">
       <h1>Country List</h1>
 
+      {/* Search input field */}
+      <input
+        type="text"
+        placeholder="Search countries..."
+        value={searchQuery}
+        onChange={handleSearchChange}
+      />
+      <br />
+      <br />
       {/* Conditionally render the button based on the existence of the access token */}
       {accessToken && (
         <Link to="/countries/new">
@@ -40,7 +58,7 @@ const CountryList = () => {
           </tr>
         </thead>
         <tbody>
-          {countries.map((country) => (
+          {filteredCountries.map((country) => (
             <tr key={country.id}>
               <td>
                 {/* Make the country name a link */}
@@ -48,10 +66,7 @@ const CountryList = () => {
               </td>
               <td>{country.description}</td>
               <td>
-
-
-                  <Link to={`/countries/${country.id}/cities`}>Cities</Link>
-
+                <Link to={`/countries/${country.id}/cities`}>Cities</Link>
               </td>
             </tr>
           ))}

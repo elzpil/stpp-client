@@ -21,6 +21,7 @@ import Login from './components/Login';
 import Register from './components/Register';
 import Home from './components/Home';
 import AboutUs from './components/AboutUs';
+import CommentCreate from './components/CommentCreate';
 
 const App = () => {
   const storedUsername = localStorage.getItem('username');
@@ -70,6 +71,9 @@ return (
 
 
         <Routes>
+          <Route path="/countries/:countryId/cities/:cityId/places/:placeId/newcomment" element={<CommentCreate />} />
+          <Route path="/countries/:countryId/cities/:cityId/newcomment" element={<CommentCreate />} />
+          <Route path="/countries/:countryId/newcomment" element={<CommentCreate />} />
           <Route path="/countries/:countryId/cities/:cityId/places/:placeId/edit" element={<PlaceEdit />} />
           <Route path="/countries/:countryId/cities/:cityId/places/new" element={<PlaceCreate />} />
           <Route path="/countries/:countryId/cities/:cityId/places/:placeId" element={<PlaceDetails />} />
@@ -88,7 +92,7 @@ return (
           <Route path="/about" element={<AboutUs />} />
         </Routes>
         <footer>
-          <p> KTU 2023</p>
+          <p> 2024 </p>
           <Link to="/about" className="footer-link">About us</Link>
         </footer>
       </div>
