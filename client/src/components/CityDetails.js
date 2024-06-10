@@ -10,6 +10,7 @@ const CityDetails = () => {
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
   const accessToken = localStorage.getItem('accessToken');
+  const [map, setMap] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -23,16 +24,19 @@ const CityDetails = () => {
 
         const filteredComments = commentResponse.data.filter(comment => comment.entityId === parseInt(cityId) && comment.entityType === "city");
 
-                // Fetch user names for comments and update state
-                const updatedComments = await Promise.all(filteredComments.map(async (comment) => {
-                  if (comment.userId) {
-                    const userName = await fetchUserName(comment.userId);
-                    return { ...comment, userName };
-                  } else {
-                    return { ...comment, userName: "Unknown User" };
-                  }
-                }));
+        // Fetch user names for comments and update state
+        const updatedComments = await Promise.all(filteredComments.map(async (comment) => {
+          if (comment.userId) {
+            const userName = await fetchUserName(comment.userId);
+            return { ...comment, userName };
+          } else {
+            return { ...comment, userName: "Unknown User" };
+          }
+        }));
         setComments(updatedComments);
+        console.log("initializzing map");
+        initializeMap(cityResponse.data);
+        console.log("initializzing map done");
       } catch (error) {
         console.error(`Error fetching city with ID ${cityId} in country ${countryId}:`, error);
       }
@@ -40,6 +44,27 @@ const CityDetails = () => {
 
     fetchData();
   }, [countryId, cityId]);
+
+  const initializeMap = (cityData) => {
+    console.log("before if ");
+    console.log(window.google);
+    if (cityData && window.google) {
+      console.log("if cityData && window.google");
+      console.log(typeof(cityData.latitude));
+      console.log(typeof(cityData.longtitude));
+      console.log(cityData.latitude)
+
+      const mapOptions = {
+        //center: { lat : 58.5, lng : 26.3 },
+        center: {lat:  Number(cityData.latitude), lng: Number(cityData.longtitude)},
+        zoom: 12,
+      };
+      
+      const mapElement = document.getElementById('map');
+      const newMap = new window.google.maps.Map(mapElement, mapOptions);
+      setMap(newMap);
+    }
+  };
 
   const fetchUserName = async (userId) => {
     try {
@@ -112,6 +137,7 @@ const CityDetails = () => {
           ))
         )}
       </div>
+      <div id="map" style={{ height: '400px', width: '100%' }}></div>
     </div>
   );
 };
