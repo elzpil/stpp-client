@@ -6,9 +6,9 @@ body {
 }
 
 .image-container {
-  max-width: 590px; /* Adjust the maximum width as needed */
+  max-width: 590px; 
   width: 100%;
-  margin: auto; /* Center the container horizontally */
+  margin: auto; 
 }
 
 .image-container img {
@@ -19,72 +19,47 @@ body {
   margin-top:20px;
 }
 
-
 .container {
   max-width: 800px;
   margin: auto;
   padding: 20px;
   text-align: center;
-  border:3px solid #000066;
-
-  background-color: #d3d3d3;
+  border:3px solid #3e362e;
+  background-color: #865b36;
   margin-top: 20px;
   margin-bottom: 20px;
 }
 
 .container label {
   display: block;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 
-.container input {
-  width: 100%;
+.container input,.container textarea{
+  width: 80%;
   padding: 8px;
   margin-bottom: 16px;
   box-sizing: border-box;
 }
 
-.container button,
-.list-container button {
-  background-color: #000066;
+.container button {
+  background-color: #3e362e;
   color: white;
   padding: 10px 15px;
   border: none;
-
   cursor: pointer;
   margin-left: 20px;
-  transition: background-color 0.3s ease; /* Add a smooth transition effect */
+  transition: background-color 0.3s ease; 
+  margin-bottom: 10px;
 }
 
-.container button:hover,
-.list-container button:hover {
-  background-color: #333; /* Change the color to your desired hover color */
-}
-
-.app-container {
-  background-color: #d3d3d3; /* Set your desired background color */
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px;
-  margin-top: 20px;
-}
-.list-container .custom-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px; /* Adjust as needed */
-  background-color: #000066; /* Set your desired background color */
-}
-.custom-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-top: 20px; /* Adjust as needed */
-  background-color: #000066; /* Set your desired background color */
+.container button:hover {
+  background-color: #8d8dcc; 
 }
 
 .navbar {
-  background-color: #000066;
-  font-family: 'Roboto Mono', sans-serif;
+  background-color: #3e362e;
+  font-family: 'TRoboto', sans-serif;
   padding: 20px;
   display: flex;
   justify-content: space-between;
@@ -101,12 +76,13 @@ body {
 .navbar li {
   margin-right: 20px;
 }
+
 .navbar p {
   text-decoration: none;
   color: #ffffff;
   font-size: 13px;
-    margin: 0; /* Reset margin */
-    line-height: 2; /* Adjust line height if necessary */
+  margin: 0; 
+  line-height: 2; 
 }
 
 .navbar a {
@@ -114,17 +90,10 @@ body {
   color: #ffffff;
   font-size: 20px;
 }
+
 .navbar a:hover {
-  color: #333; /* Change the color to your desired hover color */
+  color: #333; 
 }
-
-
-.navbar .right {
-  margin-left: auto;
-}
-.right-links {
-   margin-right: auto;
- }
 
 
 .navbar-links {
@@ -133,57 +102,32 @@ body {
   align-items: center;
 }
 
-.navbar-links .right-links {
-  margin-left: auto;
-  display: flex;
-  align-items: center;
-}
-
-
-.list-container {
-  max-width: 800px;
-  margin: auto;
-  padding: 20px;
-  text-align: center;
-  border: 1px solid #ccc;
-  border:3px solid #000066;
-  background-color: #d3d3d3;
-  margin-top: 20px;
-  margin-bottom: 40px;
-}
-
-.list-container table {
+.container table {
   width: 100%;
   border-collapse: collapse;
-  margin-top: 20px; /* Adjust as needed */
-background-color: #d3d3d3;
+  margin-top: 20px; 
+  background-color: #ac8968;
 }
 
-.list-container th, .list-container td {
-  padding: 10px;
-  border: 1px solid #ccc;
+.container th, .container td {
+  padding: 5px;
+  border: 1px solid #ffffff;
+  color:#000000;
 }
 
-.list-container th {
-  background-color: #000066;
+.container th {
+  background-color: #3e362e;
   color: white;
 }
-
-.list-container td {
-  background-color: #f0f0f0;
-}
-
-.list-container td.empty-column {
-  /* Styles for the empty column */
+tbody a {
+  color:#000000;
 }
 
 footer {
-  background-color: #000066;
-
+  background-color: #3e362e;
   display: flex;
   justify-content: space-between;
   align-items: center;
-
   width: 100%;
   color: white;
   margin-top: 20px;
@@ -191,27 +135,22 @@ footer {
 }
 
 footer p {
-  margin: 0; /* Remove default margin */
+  margin: 0; 
   text-align: center;
-  flex-grow: 1; /* Allow the <p> to take up remaining space */
-  font-family: 'Times New Roman', sans-serif;
+  flex-grow: 1; 
+  font-family: 'Roboto', sans-serif;
 }
 
 .footer-link {
-  font-family: 'Times New Roman', sans-serif;
+  font-family: 'Roboto', sans-serif;
   padding-right: 10px;
 }
-/* Add this style to hide links initially */
-.navbar-links {
-  display: none;
-}
 
-/* Add this style for the hamburger menu */
 .menu-toggle {
   font-size: 20px;
   cursor: pointer;
   margin-right: 20px;
-  display: none; /* Initially hidden on larger screens */
+  display: none; 
 }
 
 @media (max-width: 768px) {
@@ -219,9 +158,8 @@ footer p {
     display: flex;
     flex-direction: column;
     position: absolute;
-    top: 60px; /* Adjust as needed */
+    top: 600px; 
     left: 0;
-    background-color: #000066;
     width: 100%;
     padding: 10px;
   }
@@ -238,17 +176,12 @@ footer p {
     flex-direction: column;
   }
 
-  .navbar ul.right {
-    margin-left: 0;
-    margin-top: 10px;
-  }
-
   .navbar ul.navbar-links {
     display: none;
     position: absolute;
     top: 60px;
     left: 0;
-    background-color: #000066;
+    background-color: #3e362e;
     width: 100%;
     padding: 10px;
   }
@@ -256,27 +189,4 @@ footer p {
   .navbar ul.navbar-links li {
     margin-bottom: 10px;
   }
-    .navbar-links.right {
-      display: none;
-      position: absolute;
-      top: 60px;
-      right: 0; /* Adjust as needed */
-      background-color: #000066;
-      width: 100%;
-      padding: 10px;
-    }
-
-    .right-links {
-      margin-right: 0; /* Reset margin in mobile view */
-      text-align: center; /* Center the text in mobile view */
-    }
 }
-
-
-
-
-
-
-
-
-

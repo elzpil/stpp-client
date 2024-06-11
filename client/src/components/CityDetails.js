@@ -19,9 +19,6 @@ const CityDetails = () => {
         setCity(cityResponse.data);
 
         const commentResponse = await axios.get(`https://localhost:7036/api/things/comments`);
-        console.log("Comments Data:", commentResponse.data);
-
-
         const filteredComments = commentResponse.data.filter(comment => comment.entityId === parseInt(cityId) && comment.entityType === "city");
 
         // Fetch user names for comments and update state
@@ -34,9 +31,7 @@ const CityDetails = () => {
           }
         }));
         setComments(updatedComments);
-        console.log("initializzing map");
         initializeMap(cityResponse.data);
-        console.log("initializzing map done");
       } catch (error) {
         console.error(`Error fetching city with ID ${cityId} in country ${countryId}:`, error);
       }
@@ -46,13 +41,7 @@ const CityDetails = () => {
   }, [countryId, cityId]);
 
   const initializeMap = (cityData) => {
-    console.log("before if ");
-    console.log(window.google);
     if (cityData && window.google) {
-      console.log("if cityData && window.google");
-      console.log(typeof(cityData.latitude));
-      console.log(typeof(cityData.longtitude));
-      console.log(cityData.latitude)
 
       const mapOptions = {
         //center: { lat : 58.5, lng : 26.3 },

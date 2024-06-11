@@ -7,7 +7,6 @@ const Login = () => {
   const [password, setPassword] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
   const navigate = useNavigate();
-  const accessToken = localStorage.getItem('accessToken');
 
   const handleLogin = async (username, password) => {
     try {
@@ -30,7 +29,23 @@ const Login = () => {
         // Store tokens in localStorage
         localStorage.setItem('accessToken', accessToken);
         localStorage.setItem('refreshToken', refreshToken);
-        localStorage.setItem('username', username);
+
+        // Fetch user info
+        const userInfoResponse = await axios.get(
+          'https://localhost:7036/api/users/me',
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${accessToken}`
+            }
+          }
+        );
+
+        if (userInfoResponse && userInfoResponse.data) {
+          const { UserName, Id } = userInfoResponse.data;
+          localStorage.setItem('username', UserName);
+          localStorage.setItem('userId', Id); // Store user ID in localStorage
+        }
 
         // Redirect after successful login
         navigate('/countries');
@@ -45,10 +60,11 @@ const Login = () => {
   };
 
   const handleLogout = () => {
-    // Clear tokens from localStorage or wherever they are stored
+    // Clear tokens and user info from localStorage
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('username');
+    localStorage.removeItem('userId');
     // Redirect to the login page or another route after logout
     navigate('/countries');
   };
@@ -71,9 +87,10 @@ const Login = () => {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
+      <br />
       <button onClick={() => handleLogin(username, password)}>Login</button>
 
-      {accessToken && (<button onClick={handleLogout}>Logout</button>)}
+      <button onClick={handleLogout}>Logout</button>
     </div>
   );
 };

@@ -76,7 +76,7 @@ const Register = () => {
         value={password}
         onChange={(e) => setPassword(e.target.value)}
       />
-
+      <br />
       <button onClick={handleRegister}>Register</button>
     </div>
   );

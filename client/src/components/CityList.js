@@ -32,7 +32,7 @@ const filteredCities = cities.filter((city) =>
 );
 
   return (
-    <div className="list-container">
+    <div className="container">
       <h1>City List</h1>
     <input
         type="text"

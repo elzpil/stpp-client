@@ -11,6 +11,7 @@ const navigate = useNavigate();
 const [comments, setComments] = useState([]);
 const accessToken = localStorage.getItem('accessToken');
 const [errorMessage, setErrorMessage] = useState('');
+const [map, setMap] = useState(null);
 
 useEffect(() => {
   const fetchData = async () => {
@@ -30,6 +31,7 @@ useEffect(() => {
         }
       }));
       setComments(updatedComments);
+       //initializeMap(cityResponse.data);
     } catch (error) {
       console.error(`Error fetching country with ID ${countryId}:`, error);
     }
@@ -141,17 +143,19 @@ const handleDeleteClick = async () => {
           Create Comment
         </button>
     )}
-      <div>
+      <table>
+
+        
         {comments.length === 0 ? (
           <p>No comments yet.</p>
         ) : (
           comments.map((comment) => (
-            <div key={comment.id} className="comment">
-              <p><strong>{comment.userName}</strong>: {comment.content}</p>
-            </div>
+            <tr key={comment.id} >
+              <td>{comment.userName}</td><td> {comment.content}</td>
+            </tr>
           ))
         )}
-      </div>
+      </table>
     </div>
   );
 };

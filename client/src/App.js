@@ -40,7 +40,7 @@ return (
         <header>
           <nav className="navbar">
             <div className="menu-toggle" onClick={toggleMenu}>
-              &#9776; {/* Hamburger icon */}
+              &#9776; 
             </div>
             <ul className="navbar-links">
               <li>
@@ -51,7 +51,7 @@ return (
               <li>
                 <Link to="/countries">Countries</Link>
               </li>
-
+            
               {accessToken && (
                 <li >
                   <p id="loggedInMessage">Logged in as {storedUsername}</p>
@@ -71,9 +71,7 @@ return (
 
 
         <Routes>
-          <Route path="/countries/:countryId/cities/:cityId/places/:placeId/newcomment" element={<CommentCreate />} />
-          <Route path="/countries/:countryId/cities/:cityId/newcomment" element={<CommentCreate />} />
-          <Route path="/countries/:countryId/newcomment" element={<CommentCreate />} />
+          <Route path="/countries/:countryId/newcomment" element={<CommentCreate />} />        
           <Route path="/countries/:countryId/cities/:cityId/places/:placeId/edit" element={<PlaceEdit />} />
           <Route path="/countries/:countryId/cities/:cityId/places/new" element={<PlaceCreate />} />
           <Route path="/countries/:countryId/cities/:cityId/places/:placeId" element={<PlaceDetails />} />

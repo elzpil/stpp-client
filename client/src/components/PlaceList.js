@@ -32,11 +32,11 @@ const filteredPlaces = places.filter((place) =>
 );
 
   return (
-    <div className="list-container">
+    <div className="container">
       <h1>Place List</h1>
     <input
         type="text"
-        placeholder="Search countries..."
+        placeholder="Search places..."
         value={searchQuery}
         onChange={handleSearchChange}
       />

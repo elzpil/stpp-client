@@ -30,7 +30,7 @@ const CountryList = () => {
   );
 
   return (
-    <div className="list-container">
+    <div className="container">
       <h1>Country List</h1>
 
       {/* Search input field */}
@@ -49,7 +49,7 @@ const CountryList = () => {
         </Link>
       )}
 
-      <table className="custom-table">
+      <table>
         <thead>
           <tr>
             <th>Name</th>
@@ -61,7 +61,6 @@ const CountryList = () => {
           {filteredCountries.map((country) => (
             <tr key={country.id}>
               <td>
-                {/* Make the country name a link */}
                 <Link to={`/countries/${country.id}`}>{country.name}</Link>
               </td>
               <td>{country.description}</td>
