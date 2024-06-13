@@ -1,4 +1,5 @@
 import axios from 'axios';
+
 const fetchUserName = async (userId) => {
   try {
     const userResponse = await axios.get(`https://localhost:7036/api/users/${userId}`);
@@ -8,4 +9,5 @@ const fetchUserName = async (userId) => {
     return null;
   }
 };
+
 export default fetchUserName;

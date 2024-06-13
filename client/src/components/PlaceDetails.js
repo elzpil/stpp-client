@@ -1,8 +1,8 @@
-// src/components/PlaceDetails.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import isTokenExpired from './IsTokenExpired';
+import EntityDelete from './EntityDelete';
 
 const PlaceDetails = () => {
   const { countryId, cityId, placeId } = useParams();
@@ -11,6 +11,8 @@ const PlaceDetails = () => {
   const accessToken = localStorage.getItem('accessToken');
   const [errorMessage, setErrorMessage] = useState('');
   const [comments, setComments] = useState([]);
+  const UNAUTHORIZED = 403;
+  const UNPROCESSABLE_ENTITY = 422;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -48,68 +50,25 @@ const PlaceDetails = () => {
   };
 
   const handleEditClick = () => {
-    // Navigate to the edit page for the current place
     navigate(`/countries/${countryId}/cities/${cityId}/places/${placeId}/edit`);
   };
 
   const handleDeleteClick = async () => {
   try {
-
-  const confirmed = window.confirm('Are you sure you want to delete this place?');
-
-    if (!confirmed) {
-    // If the user cancels the operation, do nothing
-    return;
-    }
-
-    let accessToken = localStorage.getItem('accessToken');
-    const refreshToken = localStorage.getItem('refreshToken');
-
-    const isAccessTokenExpired = isTokenExpired(accessToken);
-    const isRefreshTokenExpired = isTokenExpired(refreshToken);
-
-    if (isAccessTokenExpired) {
-      // Use the refresh token to get a new access token
-      const response = await axios.post(
-        'https://localhost:7036/api/accessToken',
-        {
-          refreshToken: localStorage.getItem('refreshToken'),
-        }
-      );
-
-      if (response && response.data) {
-        // Update the stored access token with the new one
-        accessToken = response.data.accessToken;
-        localStorage.setItem('accessToken', accessToken);
-      } else {
-        // Handle the case where refreshing the token failed
-        console.error('Error refreshing token:', response);
-        return;
-      }
-    }
-
-      // Send a DELETE request to the place endpoint
-      await axios.delete(`https://localhost:7036/api/countries/${countryId}/cities/${cityId}/places/${placeId}`, {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-      // Redirect to the city details page or another page after deletion
+    const deletePath =`https://localhost:7036/api/countries/${countryId}/cities/${cityId}/places/${placeId}`;
+    const success = await EntityDelete('place', deletePath);
+    if (success) {
       navigate(`/countries/${countryId}/cities/${cityId}/places`);
+    }
   } catch (error) {
     console.error('Error deleting :', error);
-
-    if (error.response && error.response.status === 422) {
-      // Handle validation errors
+    if (error.response && error.response.status === UNPROCESSABLE_ENTITY) {
       const validationErrors = error.response.data.errors;
       const errorMessage = Object.values(validationErrors).flat().join(', ');
       setErrorMessage(errorMessage);
-    } else if (error.response && error.response.status === 403){
+    } else if (error.response && error.response.status === UNAUTHORIZED){
       setErrorMessage("unauthorized");
     } else {
-
-      // Handle other types of errors
       const errorMessage = error.response ? error.response.data.message : error.message;
       setErrorMessage(errorMessage);
     }

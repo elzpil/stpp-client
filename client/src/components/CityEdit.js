@@ -1,4 +1,3 @@
-// src/components/CityEdit.js
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -12,6 +11,8 @@ const CityEdit = () => {
   const [editedLat, setEditedLat] = useState('');
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState('');
+  const UNAUTHORIZED = 403;
+  const UNPROCESSABLE_ENTITY = 422;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -39,7 +40,6 @@ const CityEdit = () => {
       const isRefreshTokenExpired = isTokenExpired(refreshToken);
 
       if (isAccessTokenExpired) {
-        // Use the refresh token to get a new access token
         const response = await axios.post(
           'https://localhost:7036/api/accessToken',
           {
@@ -48,16 +48,14 @@ const CityEdit = () => {
         );
 
         if (response && response.data) {
-          // Update the stored access token with the new one
           accessToken = response.data.accessToken;
           localStorage.setItem('accessToken', accessToken);
         } else {
-          // Handle the case where refreshing the token failed
           console.error('Error refreshing token:', response);
           return;
         }
       }
-      // Send a PUT request to update the city description
+
       await axios.put(`https://localhost:7036/api/countries/${countryId}/cities/${cityId}`, {
         description: editedDescription,
         latitude: editedLat,
@@ -69,26 +67,23 @@ const CityEdit = () => {
           Authorization: `Bearer ${accessToken}`,
         },
       });
-      // Redirect to the city details page after editing
+      
       navigate(`/countries/${countryId}/cities`);
   } catch (error) {
     console.error('Error editing :', error);
 
-    if (error.response && error.response.status === 422) {
-      // Handle validation errors
-      const validationErrors = error.response.data.errors;
-      const errorMessage = Object.values(validationErrors).flat().join(', ');
-      setErrorMessage(errorMessage);
-    } else if (error.response && error.response.status === 403){
-      setErrorMessage("unauthorized");
-    } else {
-
-      // Handle other types of errors
-      const errorMessage = error.response ? error.response.data.message : error.message;
-      setErrorMessage(errorMessage);
+      if (error.response && error.response.status === UNPROCESSABLE_ENTITY) {
+        const validationErrors = error.response.data.errors;
+        const errorMessage = Object.values(validationErrors).flat().join(', ');
+        setErrorMessage(errorMessage);
+      } else if (error.response && error.response.status === UNAUTHORIZED){
+        setErrorMessage("unauthorized");
+      } else {
+        const errorMessage = error.response ? error.response.data.message : error.message;
+        setErrorMessage(errorMessage);
+      }
     }
-  }
-};
+  };
 
   if (!city) {
     return <div>Loading...</div>;

@@ -34,16 +34,11 @@ const Register = () => {
         console.error('Invalid response:', response);
         setError('Invalid response');
       }
-} catch (error) {
-  console.error('Registration Error:', error.response ? error.response.data : error.message);
-//setErrorMessage('Example error message!');
-  const errorMessage = error.response ? error.response.data.message : error.message;
-  // Use a function form of setState to ensure state is updated correctly
-  setErrorMessage(error.response ? error.response.data : error.message);
-
-}
-
-
+    } catch (error) {
+      console.error('Registration Error:', error.response ? error.response.data : error.message);
+      const errorMessage = error.response ? error.response.data.message : error.message;
+      setErrorMessage(error.response ? error.response.data : error.message);
+    }
   };
 
   return (

@@ -1,4 +1,3 @@
-// src/components/CommentCreate.js
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -19,7 +18,6 @@ const CommentCreate = () => {
     const isRefreshTokenExpired = isTokenExpired(refreshToken);
 
     if (isAccessTokenExpired) {
-      // Use the refresh token to get a new access token
       const response = await axios.post(
         'https://localhost:7036/api/accessToken',
         {
@@ -28,11 +26,9 @@ const CommentCreate = () => {
       );
 
       if (response && response.data) {
-        // Update the stored access token with the new one
         accessToken = response.data.accessToken;
         localStorage.setItem('accessToken', accessToken);
       } else {
-        // Handle the case where refreshing the token failed
         console.error('Error refreshing token:', response);
         return;
       }

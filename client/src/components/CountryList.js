@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 const CountryList = () => {
   const [countries, setCountries] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
-  const accessToken = localStorage.getItem('accessToken'); // Get access token from localStorage
+  const accessToken = localStorage.getItem('accessToken'); 
 
   useEffect(() => {
     const fetchData = async () => {
@@ -32,8 +32,6 @@ const CountryList = () => {
   return (
     <div className="container">
       <h1>Country List</h1>
-
-      {/* Search input field */}
       <input
         type="text"
         placeholder="Search countries..."
@@ -42,7 +40,6 @@ const CountryList = () => {
       />
       <br />
       <br />
-      {/* Conditionally render the button based on the existence of the access token */}
       {accessToken && (
         <Link to="/countries/new">
           <button>Create New Country</button>

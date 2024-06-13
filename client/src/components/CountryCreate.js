@@ -10,69 +10,59 @@ const CountryCreate = () => {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState('');
 
-const handleCreate = async () => {
-  try {
-    let accessToken = localStorage.getItem('accessToken');
-    const refreshToken = localStorage.getItem('refreshToken');
+  const handleCreate = async () => {
+    try {
+      let accessToken = localStorage.getItem('accessToken');
+      const refreshToken = localStorage.getItem('refreshToken');
+      const isAccessTokenExpired = isTokenExpired(accessToken);
+      const isRefreshTokenExpired = isTokenExpired(refreshToken);
 
-    const isAccessTokenExpired = isTokenExpired(accessToken);
-    const isRefreshTokenExpired = isTokenExpired(refreshToken);
+      if (isAccessTokenExpired) {
+        const response = await axios.post(
+          'https://localhost:7036/api/accessToken',
+          {
+            refreshToken: localStorage.getItem('refreshToken'),
+          }
+        );
 
-    if (isAccessTokenExpired) {
-      // Use the refresh token to get a new access token
+        if (response && response.data) {
+          accessToken = response.data.accessToken;
+          localStorage.setItem('accessToken', accessToken);
+        } else {
+          console.error('Error refreshing token:', response);
+          return;
+        }
+      }
+
       const response = await axios.post(
-        'https://localhost:7036/api/accessToken',
+        'https://localhost:7036/api/countries',
         {
-          refreshToken: localStorage.getItem('refreshToken'),
+          name,
+          description,
+        },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${accessToken}`,
+          },
         }
       );
 
-      if (response && response.data) {
-        // Update the stored access token with the new one
-        accessToken = response.data.accessToken;
-        localStorage.setItem('accessToken', accessToken);
+      navigate(`/countries`);
+
+    } catch (error) {
+      console.error('Error creating country:', error);
+
+      if (error.response && error.response.status === 422) {
+        const validationErrors = error.response.data.errors;
+        const errorMessage = Object.values(validationErrors).flat().join(', ');
+        setErrorMessage(errorMessage);
       } else {
-        // Handle the case where refreshing the token failed
-        console.error('Error refreshing token:', response);
-        return;
+        const errorMessage = error.response ? error.response.data.message : error.message;
+        setErrorMessage(errorMessage);
       }
     }
-
-    // Continue with the original request using the updated access token
-    const response = await axios.post(
-      'https://localhost:7036/api/countries',
-      {
-        name,
-        description,
-      },
-      {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
-        },
-      }
-    );
-
-    // Redirect to the details page of the newly created country
-    navigate(`/countries`);
-
-  } catch (error) {
-    console.error('Error creating country:', error);
-
-    if (error.response && error.response.status === 422) {
-      // Handle validation errors
-      const validationErrors = error.response.data.errors;
-      const errorMessage = Object.values(validationErrors).flat().join(', ');
-      setErrorMessage(errorMessage);
-    } else {
-      // Handle other types of errors
-      const errorMessage = error.response ? error.response.data.message : error.message;
-      setErrorMessage(errorMessage);
-    }
-  }
-};
-
-
+  };
 
   return (
     <div className="container">

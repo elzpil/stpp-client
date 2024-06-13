@@ -1,4 +1,3 @@
-// src/components/CountryEdit.js
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -10,7 +9,8 @@ const CountryEdit = () => {
   const [editedDescription, setEditedDescription] = useState('');
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState('');
-
+  const UNAUTHORIZED = 403;
+  const UNPROCESSABLE_ENTITY = 422;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -36,49 +36,41 @@ const CountryEdit = () => {
         const isRefreshTokenExpired = isTokenExpired(refreshToken);
 
         if (isAccessTokenExpired) {
-              // Use the refresh token to get a new access token
-              const response = await axios.post(
-                'https://localhost:7036/api/accessToken',
-                {
-                  refreshToken: localStorage.getItem('refreshToken'),
-                }
-              );
-
-              if (response && response.data) {
-                // Update the stored access token with the new one
-                accessToken = response.data.accessToken;
-                localStorage.setItem('accessToken', accessToken);
-              } else {
-                // Handle the case where refreshing the token failed
-                console.error('Error refreshing token:', response);
-                return;
-              }
+          const response = await axios.post(
+            'https://localhost:7036/api/accessToken',
+            {
+              refreshToken: localStorage.getItem('refreshToken'),
             }
-      // Send a PUT request to update the country description
+          );
+
+          if (response && response.data) {
+            accessToken = response.data.accessToken;
+            localStorage.setItem('accessToken', accessToken);
+          } else {
+            console.error('Error refreshing token:', response);
+            return;
+          }
+        }
       await axios.put(`https://localhost:7036/api/countries/${countryId}`, {
         description: editedDescription,
       },
-         {
-           headers: {
-             'Content-Type': 'application/json',
-             Authorization: `Bearer ${accessToken}`,
-           },
-         });
-      // Redirect to the country details page after editing
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
       navigate(`/countries`);
   } catch (error) {
     console.error('Error editing country:', error);
 
-    if (error.response && error.response.status === 422) {
-      // Handle validation errors
+    if (error.response && error.response.status === UNPROCESSABLE_ENTITY) {
       const validationErrors = error.response.data.errors;
       const errorMessage = Object.values(validationErrors).flat().join(', ');
       setErrorMessage(errorMessage);
-    } else if (error.response && error.response.status === 403){
+    } else if (error.response && error.response.status === UNAUTHORIZED){
       setErrorMessage("unauthorized");
     } else {
-
-      // Handle other types of errors
       const errorMessage = error.response ? error.response.data.message : error.message;
       setErrorMessage(errorMessage);
     }

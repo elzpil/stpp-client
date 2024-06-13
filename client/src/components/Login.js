@@ -26,11 +26,9 @@ const Login = () => {
       if (response && response.data) {
         const { accessToken, refreshToken } = response.data;
 
-        // Store tokens in localStorage
         localStorage.setItem('accessToken', accessToken);
         localStorage.setItem('refreshToken', refreshToken);
 
-        // Fetch user info
         const userInfoResponse = await axios.get(
           'https://localhost:7036/users/me',
           {
@@ -45,10 +43,8 @@ const Login = () => {
           const { userName, id } = userInfoResponse.data;
           console.log(userName + id);
           localStorage.setItem('username', username);
-          localStorage.setItem('userId', id); // Store user ID in localStorage
+          localStorage.setItem('userId', id); 
         }
-
-        // Redirect after successful login
         navigate('/countries');
       } else {
         console.error('Invalid response:', response);
@@ -61,12 +57,10 @@ const Login = () => {
   };
 
   const handleLogout = () => {
-    // Clear tokens and user info from localStorage
     localStorage.removeItem('accessToken');
     localStorage.removeItem('refreshToken');
     localStorage.removeItem('username');
     localStorage.removeItem('userId');
-    // Redirect to the login page or another route after logout
     navigate('/countries');
   };
 

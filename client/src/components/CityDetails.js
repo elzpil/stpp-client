@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
 import isTokenExpired from './IsTokenExpired';
+import EntityDelete from './EntityDelete';
 
 const CityDetails = () => {
   const { countryId, cityId } = useParams();
@@ -17,17 +18,16 @@ const CityDetails = () => {
       try {
         const cityResponse = await axios.get(`https://localhost:7036/api/countries/${countryId}/cities/${cityId}`);
         setCity(cityResponse.data);
-
         const commentResponse = await axios.get(`https://localhost:7036/api/things/comments`);
-        const filteredComments = commentResponse.data.filter(comment => comment.entityId === parseInt(cityId) && comment.entityType === "city");
-
-        // Fetch user names for comments and update state
+        const filteredComments = commentResponse.data.filter(
+          comment => comment.entityId === parseInt(cityId) && comment.entityType === "city"
+        );
         const updatedComments = await Promise.all(filteredComments.map(async (comment) => {
           if (comment.userId) {
             const userName = await fetchUserName(comment.userId);
             return { ...comment, userName };
           } else {
-            return { ...comment, userName: "Unknown User" };
+            return { ...comment, userName: "Unknown" };
           }
         }));
         setComments(updatedComments);
@@ -44,11 +44,9 @@ const CityDetails = () => {
     if (cityData && window.google) {
 
       const mapOptions = {
-        //center: { lat : 58.5, lng : 26.3 },
         center: {lat:  Number(cityData.latitude), lng: Number(cityData.longitude)},
         zoom: 12,
-      };
-      
+      };  
       const mapElement = document.getElementById('map');
       const newMap = new window.google.maps.Map(mapElement, mapOptions);
       setMap(newMap);
@@ -71,33 +69,12 @@ const CityDetails = () => {
 
   const handleDeleteClick = async () => {
     try {
-      const confirmed = window.confirm('Are you sure you want to delete this city?');
-      if (!confirmed) return;
-
-      let accessToken = localStorage.getItem('accessToken');
-      const refreshToken = localStorage.getItem('refreshToken');
-      const isAccessTokenExpired = isTokenExpired(accessToken);
-      const isRefreshTokenExpired = isTokenExpired(refreshToken);
-
-      if (isAccessTokenExpired) {
-        const response = await axios.post('https://localhost:7036/api/accessToken', { refreshToken });
-        if (response && response.data) {
-          accessToken = response.data.accessToken;
-          localStorage.setItem('accessToken', accessToken);
-        } else {
-          console.error('Error refreshing token:', response);
-          return;
-        }
-      }
-
-      await axios.delete(`https://localhost:7036/api/countries/${countryId}/cities/${cityId}`, {
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${accessToken}`,
-        },
-      });
-
+      const deletePath =`https://localhost:7036/api/countries/${countryId}/cities/${cityId}`;
+      const success = await EntityDelete('city', deletePath);
+    if (success) {
       navigate(`/countries/${countryId}/cities`);
+    }
+      
     } catch (error) {
       console.error('Error deleting:', error);
       const errorMessage = error.response ? error.response.data.message : error.message;

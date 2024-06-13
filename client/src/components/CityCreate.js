@@ -11,63 +11,55 @@ const CityCreate = () => {
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState('');
 
- const handleCreate = async () => {
-   try {
-     let accessToken = localStorage.getItem('accessToken');
-     const refreshToken = localStorage.getItem('refreshToken');
+  const handleCreate = async () => {
+    try {
+      let accessToken = localStorage.getItem('accessToken');
+      const refreshToken = localStorage.getItem('refreshToken');
+      const isAccessTokenExpired = isTokenExpired(accessToken);
+      const isRefreshTokenExpired = isTokenExpired(refreshToken);
 
-     const isAccessTokenExpired = isTokenExpired(accessToken);
-     const isRefreshTokenExpired = isTokenExpired(refreshToken);
-
-     if (isAccessTokenExpired) {
-       // Use the refresh token to get a new access token
-       const response = await axios.post(
+      if (isAccessTokenExpired) {
+        const response = await axios.post(
          'https://localhost:7036/api/accessToken',
          {
            refreshToken: localStorage.getItem('refreshToken'),
          }
-       );
+        );
 
-       if (response && response.data) {
-         // Update the stored access token with the new one
-         accessToken = response.data.accessToken;
-         localStorage.setItem('accessToken', accessToken);
-       } else {
-         // Handle the case where refreshing the token failed
-         console.error('Error refreshing token:', response);
-         return;
-       }
-     }
+        if (response && response.data) {
+          accessToken = response.data.accessToken;
+          localStorage.setItem('accessToken', accessToken);
+        } else {
+          console.error('Error refreshing token:', response);
+          return;
+        }
+      }
 
       const response = await axios.post(`https://localhost:7036/api/countries/${countryId}/cities`, {
         name,
         description,
       },
-             {
-               headers: {
-                 'Content-Type': 'application/json',
-                 Authorization: `Bearer ${accessToken}`,
-               },
-             });
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
 
-      // Redirect to the details page of the newly created city
       navigate(`/countries/${countryId}/cities`);
-  } catch (error) {
-    console.error('Error creating country:', error);
+    } catch (error) {
+      console.error('Error creating country:', error);
 
-    if (error.response && error.response.status === 422) {
-      // Handle validation errors
-      const validationErrors = error.response.data.errors;
-      const errorMessage = Object.values(validationErrors).flat().join(', ');
-      setErrorMessage(errorMessage);
-    } else {
-      // Handle other types of errors
-      const errorMessage = error.response ? error.response.data.message : error.message;
-      setErrorMessage(errorMessage);
+      if (error.response && error.response.status === 422) {
+        const validationErrors = error.response.data.errors;
+        const errorMessage = Object.values(validationErrors).flat().join(', ');
+        setErrorMessage(errorMessage);
+      } else {
+        const errorMessage = error.response ? error.response.data.message : error.message;
+        setErrorMessage(errorMessage);
+      }
     }
-  }
-};
-
+  };
 
   return (
     <div className="container">

@@ -1,4 +1,4 @@
-// Header.js
+// Header.js not being used
 
 import React from 'react';
 import { Link } from 'react-router-dom';
