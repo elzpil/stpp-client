@@ -32,7 +32,7 @@ const Login = () => {
 
         // Fetch user info
         const userInfoResponse = await axios.get(
-          'https://localhost:7036/api/users/me',
+          'https://localhost:7036/users/me',
           {
             headers: {
               'Content-Type': 'application/json',
@@ -42,9 +42,10 @@ const Login = () => {
         );
 
         if (userInfoResponse && userInfoResponse.data) {
-          const { UserName, Id } = userInfoResponse.data;
-          localStorage.setItem('username', UserName);
-          localStorage.setItem('userId', Id); // Store user ID in localStorage
+          const { userName, id } = userInfoResponse.data;
+          console.log(userName + id);
+          localStorage.setItem('username', username);
+          localStorage.setItem('userId', id); // Store user ID in localStorage
         }
 
         // Redirect after successful login

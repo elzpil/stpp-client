@@ -45,7 +45,7 @@ const CityDetails = () => {
 
       const mapOptions = {
         //center: { lat : 58.5, lng : 26.3 },
-        center: {lat:  Number(cityData.latitude), lng: Number(cityData.longtitude)},
+        center: {lat:  Number(cityData.latitude), lng: Number(cityData.longitude)},
         zoom: 12,
       };
       

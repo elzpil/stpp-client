@@ -8,6 +8,8 @@ const CityEdit = () => {
   const { countryId, cityId } = useParams();
   const [city, setCity] = useState(null);
   const [editedDescription, setEditedDescription] = useState('');
+  const [editedLong, setEditedLong] = useState('');
+  const [editedLat, setEditedLat] = useState('');
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState('');
 
@@ -15,9 +17,11 @@ const CityEdit = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get(`https://localhost:7036/api/countries/${countryId}/cities/${cityId}`);
-        const { description } = response.data;
+        const { description, latitude, longitude } = response.data;
         setCity(response.data);
         setEditedDescription(description);
+        setEditedLat(latitude);
+        setEditedLong(longitude);
       } catch (error) {
         console.error(`Error fetching city with ID ${cityId} in country with ID ${countryId}:`, error);
       }
@@ -28,41 +32,43 @@ const CityEdit = () => {
 
   const handleSave = async () => {
     try {
-    let accessToken = localStorage.getItem('accessToken');
-         const refreshToken = localStorage.getItem('refreshToken');
+      let accessToken = localStorage.getItem('accessToken');
+      const refreshToken = localStorage.getItem('refreshToken');
 
-         const isAccessTokenExpired = isTokenExpired(accessToken);
-         const isRefreshTokenExpired = isTokenExpired(refreshToken);
+      const isAccessTokenExpired = isTokenExpired(accessToken);
+      const isRefreshTokenExpired = isTokenExpired(refreshToken);
 
-         if (isAccessTokenExpired) {
-           // Use the refresh token to get a new access token
-           const response = await axios.post(
-             'https://localhost:7036/api/accessToken',
-             {
-               refreshToken: localStorage.getItem('refreshToken'),
-             }
-           );
+      if (isAccessTokenExpired) {
+        // Use the refresh token to get a new access token
+        const response = await axios.post(
+          'https://localhost:7036/api/accessToken',
+          {
+            refreshToken: localStorage.getItem('refreshToken'),
+          }
+        );
 
-           if (response && response.data) {
-             // Update the stored access token with the new one
-             accessToken = response.data.accessToken;
-             localStorage.setItem('accessToken', accessToken);
-           } else {
-             // Handle the case where refreshing the token failed
-             console.error('Error refreshing token:', response);
-             return;
-           }
-         }
+        if (response && response.data) {
+          // Update the stored access token with the new one
+          accessToken = response.data.accessToken;
+          localStorage.setItem('accessToken', accessToken);
+        } else {
+          // Handle the case where refreshing the token failed
+          console.error('Error refreshing token:', response);
+          return;
+        }
+      }
       // Send a PUT request to update the city description
       await axios.put(`https://localhost:7036/api/countries/${countryId}/cities/${cityId}`, {
         description: editedDescription,
+        latitude: editedLat,
+        longitude: editedLong,
       },
-                    {
-                      headers: {
-                        'Content-Type': 'application/json',
-                        Authorization: `Bearer ${accessToken}`,
-                      },
-                    });
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
       // Redirect to the city details page after editing
       navigate(`/countries/${countryId}/cities`);
   } catch (error) {
@@ -95,6 +101,14 @@ const CityEdit = () => {
       <label>
         Description:
         <textarea value={editedDescription} onChange={(e) => setEditedDescription(e.target.value)} />
+      </label>
+      <label>
+        Latitude:
+        <input type="text" value={editedLat} onChange={(e) => setEditedLat(e.target.value)} ></input>
+      </label>
+      <label>
+        Longitude:
+        <input type="text" value={editedLong} onChange={(e) => setEditedLong(e.target.value)} ></input>
       </label>
       <button onClick={handleSave}>Save Changes</button>
     </div>
